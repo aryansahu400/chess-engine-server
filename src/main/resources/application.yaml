@@ -1,0 +1,13 @@
+spring:
+  ai:
+    openai:
+      api-key: ${OPEN_AI_API_KEY}
+      base-url: ${OPEN_AI_BASE_URL:https://ollama.com}
+      chat:
+        options:
+          temperature: 0.7
+          model: ${OPEN_AI_MODEL:qwen3.5:cloud}
+suggestion:
+  url: https://stockfish.online/api/s/v2.php
+envrionment: ${git.branch:dev}
+version: ${git.commit.id:unknown}
