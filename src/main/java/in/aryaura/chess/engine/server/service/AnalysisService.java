@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 
 import reactor.core.publisher.Flux;
 
+import java.time.Duration;
+
 
 @Service
 public class AnalysisService {
@@ -17,15 +19,20 @@ public class AnalysisService {
     private final ChatClient chatClient;
 
     @Autowired
-    public AnalysisService(ChatClient.Builder builder) {
-        this.chatClient = builder.build();
+    public AnalysisService(ChatClient chatClient) {
+        this.chatClient = chatClient;
     }
     @SneakyThrows
     public Flux<String> analysis(AnalysisRequest request) {
 
         return chatClient
-                .prompt(SystemPrompts.MOVE_ANALYSIS.formatted(request.getFenBefore(), request.getFenAfter()))
+                .prompt(SystemPrompts.MOVE_ANALYSIS.formatted(
+                        request.getFenBefore(),
+                        request.getFenAfter()
+                ))
                 .stream()
-                .content();
+                .content()
+                .bufferTimeout(20, Duration.ofMillis(100))
+                .map(tokens -> String.join("", tokens));
     }
 }

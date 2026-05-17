@@ -5,8 +5,17 @@ spring:
     redis:
       host: ${REDIS_HOST:localhost}
       port: ${REDIS_PORT:6379}
+  datasource:
+    url: ${JDBC_UL}/${DATABASE_NAME}
+    username: ${CHESS_USER}
+    password: ${CHESS_PASSWORD}
 
   ai:
+    chat:
+      memory:
+        repository:
+          jdbc:
+            initialize-schema: always
     openai:
       api-key: ${OPEN_AI_API_KEY}
       base-url: ${OPEN_AI_BASE_URL:https://ollama.com}
@@ -21,5 +30,5 @@ version: ${git.commit.id:unknown}
 rate-limit:
   enabled: ${RATE_LIMIT_ENABLED:true}
   requests: ${RATE_LIMIT_VALUE:10}
-  duration-seconds: ${RATE_LIMIT_TIME_WINDOW:10000}
+  duration-seconds: ${RATE_LIMIT_TIME_WINDOW:5}
   cookie-name: ${COOKIE_NAME:0aacbd04-a7f1-4050-b452-8c81de7e5f25}
