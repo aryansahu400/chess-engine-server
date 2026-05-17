@@ -27,7 +27,6 @@ public class SuggestionService {
         this.webClient = builder.baseUrl(baseUrl).build();
     }
     public Mono<SuggestMoveResponse> getMoveSuggestion(String fen) {
-        System.out.println(Thread.currentThread().isVirtual());
         return webClient
                 .get()
                 .uri(uriBuilder -> uriBuilder

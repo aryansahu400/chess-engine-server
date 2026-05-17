@@ -1,6 +1,11 @@
 spring:
   config:
     import: optional:classpath:git.properties
+  data:
+    redis:
+      host: ${REDIS_HOST:localhost}
+      port: ${REDIS_PORT:6379}
+
   ai:
     openai:
       api-key: ${OPEN_AI_API_KEY}
@@ -13,3 +18,8 @@ suggestion:
   url: https://stockfish.online/api/s/v2.php
 environment: ${git.branch:dev}
 version: ${git.commit.id:unknown}
+rate-limit:
+  enabled: ${RATE_LIMIT_ENABLED:true}
+  requests: ${RATE_LIMIT_VALUE:10}
+  duration-seconds: ${RATE_LIMIT_TIME_WINDOW:10000}
+  cookie-name: ${COOKIE_NAME:0aacbd04-a7f1-4050-b452-8c81de7e5f25}

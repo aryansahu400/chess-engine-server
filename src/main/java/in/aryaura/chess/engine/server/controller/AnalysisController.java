@@ -1,5 +1,6 @@
 package in.aryaura.chess.engine.server.controller;
 
+import in.aryaura.chess.engine.server.configuration.VirtualThreadSchedulerConfiguration;
 import in.aryaura.chess.engine.server.model.AnalysisRequest;
 import in.aryaura.chess.engine.server.service.AnalysisService;
 import org.springframework.http.MediaType;
@@ -19,6 +20,6 @@ public class AnalysisController {
 
     @PostMapping(value = "/analyse-move", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
     public Flux<String> analyseMove(@RequestBody AnalysisRequest request) {
-        return analysisService.analysis(request);
+        return analysisService.analysis(request).subscribeOn(VirtualThreadSchedulerConfiguration.vtScheduler);
     }
 }
