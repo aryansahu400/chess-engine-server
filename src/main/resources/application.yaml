@@ -1,4 +1,6 @@
 spring:
+  config:
+    import: optional:classpath:git.properties
   ai:
     openai:
       api-key: ${OPEN_AI_API_KEY}
@@ -9,5 +11,5 @@ spring:
           model: ${OPEN_AI_MODEL:qwen3.5:cloud}
 suggestion:
   url: https://stockfish.online/api/s/v2.php
-envrionment: ${git.branch:dev}
+environment: ${git.branch:dev}
 version: ${git.commit.id:unknown}

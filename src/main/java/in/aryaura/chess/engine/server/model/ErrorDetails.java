@@ -2,7 +2,9 @@ package in.aryaura.chess.engine.server.model;
 
 import lombok.Builder;
 import lombok.Data;
+import lombok.ToString;
 
+@ToString
 @Builder
 @Data
 public class ErrorDetails {
@@ -15,7 +17,6 @@ public class ErrorDetails {
     private String className;
     private String methodName;
     private Integer lineNumber;
-    private String cause;
     private String stackTrace;
 
 }

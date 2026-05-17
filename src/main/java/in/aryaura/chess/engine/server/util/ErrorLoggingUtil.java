@@ -18,7 +18,6 @@ public class ErrorLoggingUtil {
                 .transactionId(transactionId)
                 .serviceName("Chess Engine")
                 .message(throwable.getMessage())
-                .cause(throwable.getCause().getLocalizedMessage())
                 .timestamp(Timestamp.valueOf(LocalDateTime.now()).toString())
                 .build();
         var stack = throwable.getStackTrace();

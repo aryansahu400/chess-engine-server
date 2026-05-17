@@ -2,6 +2,7 @@ package in.aryaura.chess.engine.server.exception;
 
 import in.aryaura.chess.engine.server.configuration.GitDetails;
 import in.aryaura.chess.engine.server.model.ErrorResponse;
+import in.aryaura.chess.engine.server.util.ErrorLoggingUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
@@ -19,7 +20,11 @@ public class GeneralExceptionHandler {
     @ExceptionHandler(GeneralException.class)
     public ResponseEntity<ErrorResponse> handleGeneralException(GeneralException ex, ServerWebExchange exchange) {
 
-        LOGGER.error("General Exception: {}", ex.getMessage());
+        LOGGER.error("General Exception: {} \n{}",
+                ex.getMessage(),
+                ErrorLoggingUtil.getNormalizedObject(ex,exchange.getRequest().getId())
+        );
+
 
         var errorResponse = ErrorResponse
                 .builder()
@@ -33,7 +38,10 @@ public class GeneralExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex, ServerWebExchange exchange){
-        LOGGER.error("Exception: {}", ex.getMessage());
+        LOGGER.error("Exception: {}\n{}",
+                ex.getMessage(),
+                ErrorLoggingUtil.getNormalizedObject(ex,exchange.getRequest().getId())
+        );
         var errorResponse = ErrorResponse
                 .builder()
                 .message("Internal Server Error")

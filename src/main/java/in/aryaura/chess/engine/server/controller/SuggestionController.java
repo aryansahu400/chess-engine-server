@@ -1,6 +1,7 @@
 package in.aryaura.chess.engine.server.controller;
 
 import in.aryaura.chess.engine.server.model.SuggestMoveRequest;
+import in.aryaura.chess.engine.server.model.SuggestMoveResponse;
 import in.aryaura.chess.engine.server.service.SuggestionService;
 
 import org.springframework.web.bind.annotation.PostMapping;
@@ -19,7 +20,7 @@ public class SuggestionController {
     }
 
     @PostMapping("/suggest-move")
-    public Mono<Map<String,Object>> get(@RequestBody SuggestMoveRequest request) {
+    public Mono<SuggestMoveResponse> get(@RequestBody SuggestMoveRequest request) {
         return suggestionService.getMoveSuggestion(request.getFen());
     }
 }

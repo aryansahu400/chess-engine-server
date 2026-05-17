@@ -1,8 +1,11 @@
 package in.aryaura.chess.engine.server.service;
 
+import in.aryaura.chess.engine.server.exception.GeneralException;
 import in.aryaura.chess.engine.server.model.SuggestMoveResponse;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.ParameterizedTypeReference;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
@@ -23,7 +26,7 @@ public class SuggestionService {
     ) {
         this.webClient = builder.baseUrl(baseUrl).build();
     }
-    public Mono<Map<String,Object>> getMoveSuggestion(String fen) {
+    public Mono<SuggestMoveResponse> getMoveSuggestion(String fen) {
         System.out.println(Thread.currentThread().isVirtual());
         return webClient
                 .get()
@@ -32,12 +35,31 @@ public class SuggestionService {
                             .queryParam("depth", 15)
                         .build()
                 ).retrieve()
+                .onStatus(HttpStatusCode::is5xxServerError, clientResponse -> {
+                    return Mono.error(new GeneralException(HttpStatus.INTERNAL_SERVER_ERROR,"Couldn't connect to stock fish servers"));
+                })
+                .onStatus(HttpStatusCode::is4xxClientError, clientResponse -> {
+                    return Mono.error(new GeneralException(HttpStatus.INTERNAL_SERVER_ERROR,"Stock fish servers couldn't process the request"));
+                })
                 .bodyToMono(new ParameterizedTypeReference<Map<String, Object>>() {})
                 .map(response -> {
-                            String move = Optional.ofNullable((String) response.get("bestMove")).orElseThrow()
-                            SuggestMoveResponse.builder()
-                                    .move()
-                                    .build()
+
+                            return SuggestMoveResponse.builder()
+                                    .move(
+                                            Optional.ofNullable((String) response.get("continuation"))
+                                                    .orElseThrow(()->new GeneralException(HttpStatus.INTERNAL_SERVER_ERROR,"Couldn't connect to stock fish servers"))
+                                                    .split(" ")[0]
+                                        )
+                                    .evaluation(
+                                            Optional.ofNullable((Double)response.get("evaluation"))
+                                                    .orElseThrow(()->new GeneralException(HttpStatus.INTERNAL_SERVER_ERROR,"Couldn't connect to stock fish servers"))
+                                    )
+                                    .explanation(Optional.ofNullable((String) response.get("bestmove"))
+                                            .orElseThrow(()->new GeneralException(HttpStatus.INTERNAL_SERVER_ERROR,"Couldn't connect to stock fish servers"))
+                                    )
+                                    .build();
+
+
                         }
                 );
     }

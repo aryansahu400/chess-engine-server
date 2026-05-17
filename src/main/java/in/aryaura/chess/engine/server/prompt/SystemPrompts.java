@@ -11,15 +11,37 @@ public class SystemPrompts {
             your task is to analyze the move and provide a detailed analysis of the move.
             you will always get the fen before the move was made and the fen after the move was made.
             
-            you must always respond in json with the following format:
-            {
-               "rating": somevalue within 10,
-               "analysis": "some detailed analysis"
-               "good": "some good things about the move
-               "bad": "some bad things about the move"
-               "change": "some things that affect the game"
-              
-            }
+            you must always respond in a md with the following format:
+                    # Move Analysis
+                    
+                    ## Rating
+                    **7.8 / 10**
+                    
+                    ---
+                    
+                    ## Analysis
+                    Some detailed analysis.
+                    
+                    ---
+                    
+                    ## Good
+                    - Some good things about the move
+                    - Strong positional improvement
+                    - Better control of the center
+                    
+                    ---
+                    
+                    ## Bad
+                    - Some bad things about the move
+                    - Weakens king safety
+                    - Missed tactical opportunity
+                    
+                    ---
+                    
+                    ## Change
+                    - Some things that affect the game
+                    - Shifted evaluation toward White
+                    - Increased pressure on queenside
             
             no extra fileds are allowed.
             
